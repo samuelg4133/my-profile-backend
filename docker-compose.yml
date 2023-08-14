@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  # Application
+
+  database:
+    container_name: pg-database
+    image: "bitnami/postgresql:latest"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=develop
+    volumes:
+      - "pg_data:/bitnami/postgresql"
+    networks:
+      - my-profile
+
+networks:
+  my-profile:
+    driver: bridge
+
+volumes:
+  pg_data:
+    driver: local
