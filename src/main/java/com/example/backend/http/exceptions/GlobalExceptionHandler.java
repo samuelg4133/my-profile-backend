@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.backend.domain.errors.InvalidCredentialsException;
 import com.example.backend.domain.errors.NotFoundException;
 import com.example.backend.domain.errors.ResourceAlreadyExistsException;
 
@@ -18,6 +19,16 @@ public class GlobalExceptionHandler {
       ResourceAlreadyExistsException ex) {
     var err = new ErrorHandler("Conflict", ex.getMessage(), HttpStatus.CONFLICT.value());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  @ResponseBody
+  public ResponseEntity<ErrorHandler> handleInvalidCredentialsException(
+      ResourceAlreadyExistsException ex) {
+    var status = HttpStatus.UNAUTHORIZED;
+    var err = new ErrorHandler(status.getReasonPhrase(), ex.getMessage(),
+        status.value());
+    return ResponseEntity.status(status).body(err);
   }
 
   @ExceptionHandler(NotFoundException.class)
